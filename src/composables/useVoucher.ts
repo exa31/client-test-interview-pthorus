@@ -11,6 +11,7 @@ export function useVoucher() {
   const toast = useToast();
   const cookies = inject<VueCookies>("$cookies");
   const isLoading = ref(false);
+  const isClaiming = ref(false);
   const vouchers = ref<Voucher[]>();
   const kategori = ref(route.query.kategori);
   watch(
@@ -51,8 +52,7 @@ export function useVoucher() {
     }
   };
   const claimVoucher = async (id: string) => {
-    isLoading.value = true;
-
+    isClaiming.value = true;
     try {
       await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/api/claim-vouchers`,
@@ -75,8 +75,15 @@ export function useVoucher() {
         toast.error("An error occurred");
       }
     } finally {
-      isLoading.value = false;
+      isClaiming.value = false;
     }
   };
-  return { getVoucher, vouchers, isLoading, countVoucher, claimVoucher };
+  return {
+    getVoucher,
+    vouchers,
+    isLoading,
+    countVoucher,
+    claimVoucher,
+    isClaiming,
+  };
 }
