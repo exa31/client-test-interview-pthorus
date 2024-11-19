@@ -65,7 +65,6 @@ export function useVoucher() {
           },
         }
       );
-      await getVoucher();
       toast.success("Voucher claimed successfully");
       vouchers.value = vouchers.value?.filter((v) => v.id !== id);
     } catch (error) {

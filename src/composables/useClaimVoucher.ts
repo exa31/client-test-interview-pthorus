@@ -11,6 +11,7 @@ export function useClaimVoucher() {
   const toast = useToast();
   const cookies = inject<VueCookies>("$cookies");
   const isLoading = ref(false);
+  const isDeleting = ref(false);
   const vouchers = ref<VoucherClaimed[]>();
   const kategori = ref(route.query.kategori);
 
@@ -51,7 +52,7 @@ export function useClaimVoucher() {
     }
   };
   const removeClaimVoucher = async (id: string) => {
-    isLoading.value = true;
+    isDeleting.value = true;
     try {
       await axiosInstance.delete(
         `${import.meta.env.VITE_BASE_URL}/api/delete-claim-vouchers/${id}`,
@@ -61,7 +62,6 @@ export function useClaimVoucher() {
           },
         }
       );
-      await getVoucher();
       toast.success("Voucher removed successfully");
       vouchers.value = vouchers.value?.filter((v) => v.id !== id);
     } catch (error) {
@@ -71,7 +71,7 @@ export function useClaimVoucher() {
         toast.error("An error occurred");
       }
     } finally {
-      isLoading.value = false;
+      isDeleting.value = false;
     }
   };
   return { getVoucher, vouchers, isLoading, countVoucher, removeClaimVoucher };
