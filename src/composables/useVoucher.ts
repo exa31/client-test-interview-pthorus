@@ -52,6 +52,7 @@ export function useVoucher() {
   };
   const claimVoucher = async (id: string) => {
     isLoading.value = true;
+
     try {
       await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/api/claim-vouchers`,

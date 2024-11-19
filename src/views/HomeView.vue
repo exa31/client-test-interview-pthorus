@@ -10,7 +10,7 @@ import { useToast } from 'vue-toast-notification';
 
 const route = useRoute()
 const router = useRouter()
-const { getVoucher, isLoading, vouchers, countVoucher } = useVoucher()
+const { getVoucher, isLoading, vouchers, countVoucher, claimVoucher, isClaiming } = useVoucher()
 const cookies = inject<VueCookies>("$cookies")
 const toast = useToast()
 const isLogin = ref(false)
@@ -25,27 +25,19 @@ watch(() => route.query.kategori, () => {
   getVoucher()
 })
 
-const claimVoucher = async (id: number) => {
-  try {
-    if (!cookies!.get("token")) {
-      toast.error('Please login first')
-      router.push('/login')
-      return
-    }
-    await axiosInstance.post(`${import.meta.env.VITE_BASE_URL}/api/claim-vouchers`, { id }, {
-      headers: {
-        Authorization: `Bearer ${cookies!.get("token")}`
-      }
-    })
-    getVoucher()
-    toast.success('Voucher claimed successfully')
-  } catch (error) {
-    console.log(error)
+const handleClaimVoucher = async (id: string) => {
+
+  if (!cookies!.get("token")) {
+    toast.error('Please login first')
+    router.push('/login')
+    return
   }
+  if (isClaiming.value) {
+    return
+  }
+  await claimVoucher(id)
 }
-const test = () => {
-  console.log('test')
-}
+
 
 const logout = async () => {
   try {
@@ -128,8 +120,9 @@ const logout = async () => {
     <div v-if="isLoading" class="text-2xl">Loading...</div>
     <div v-else>
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <CardVouchers v-for="(voucher, index) in vouchers" :id="voucher.id" @claimVoucher="claimVoucher" :key="index"
-          :kategori="voucher.kategori" @p="test" :nama="voucher.nama" :foto="voucher.foto" :status="voucher.status" />
+        <CardVouchers v-for="(voucher, index) in vouchers" :id="voucher.id" @claimVoucher="handleClaimVoucher"
+          :key="index" :kategori="voucher.kategori" :nama="voucher.nama" :foto="voucher.foto"
+          :status="voucher.status" />
       </div>
     </div>
   </div>

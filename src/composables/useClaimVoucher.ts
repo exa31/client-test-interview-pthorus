@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/libs/axios";
 import type { ResGetVouchersClaimed, VoucherClaimed } from "@/types";
 import { AxiosError } from "axios";
-import { inject, reactive, ref, watch } from "vue";
+import { inject, reactive, ref } from "vue";
 import type { VueCookies } from "vue-cookies";
 import { useRoute } from "vue-router";
 import { useToast } from "vue-toast-notification";
@@ -13,12 +13,7 @@ export function useClaimVoucher() {
   const isLoading = ref(false);
   const vouchers = ref<VoucherClaimed[]>();
   const kategori = ref(route.query.kategori);
-  watch(
-    () => route.query.kategori,
-    (newKategori) => {
-      kategori.value = newKategori;
-    }
-  );
+
   const countVoucher = reactive<{
     food: number;
     drink: number;
