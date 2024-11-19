@@ -5,7 +5,7 @@ import { onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
-const { countVoucher, getVoucher, isLoading, removeClaimVoucher, vouchers } = useClaimVoucher()
+const { countVoucher, getVoucher, isLoading, removeClaimVoucher, isDeleting, vouchers } = useClaimVoucher()
 
 onMounted(() => {
   getVoucher()
@@ -16,6 +16,9 @@ watch(() => route.query.kategori, () => {
 })
 
 const handleDeleteVoucherClaim = async (id: string) => {
+  if (isDeleting.value) {
+    return
+  }
   await removeClaimVoucher(id)
 }
 
