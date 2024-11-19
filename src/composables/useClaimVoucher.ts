@@ -74,5 +74,12 @@ export function useClaimVoucher() {
       isDeleting.value = false;
     }
   };
-  return { getVoucher, vouchers, isLoading, countVoucher, removeClaimVoucher };
+  return {
+    getVoucher,
+    vouchers,
+    isLoading,
+    countVoucher,
+    removeClaimVoucher,
+    isDeleting,
+  };
 }
