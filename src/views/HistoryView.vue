@@ -18,6 +18,9 @@ const { countVoucher, getVoucher, isLoading, removeClaimVoucher, isDeleting, vou
 onMounted(() => {
   getVoucher()
   initFlowbite()
+  if (!cookies!.get('token')) {
+    router.push('/login')
+  }
 })
 
 watch(() => route.query.kategori, () => {
@@ -66,6 +69,13 @@ const handleDeleteVoucherClaim = async (id: string) => {
     class="fixed top-0 left-0 z-40 w-64 h-screen px-4 py-4 pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:left-auto sm:right-0 sm:pt-20 sm:px-4 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
     aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-gray-300 dark:bg-gray-800">
+      <div class="flex items-center justify-center my-8 space-x-4 sm:my-0 sm:hidden">
+        <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start"
+          class="w-10 h-10 rounded-full cursor-pointer"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQbNlDeOEF9mbaBzWL9K2QHPPkofVOU-FLDwj_7bPMGgcd8JIhIJhoppJy4WwVXFd3BH8&usqp=CAU"
+          alt="User dropdown">
+        <h3 class="text-2xl font-bold">Horus</h3>
+      </div>
       <h1 class="text-3xl font-semibold text-center ">
         <RouterLink to="">Kategory</RouterLink>
       </h1>

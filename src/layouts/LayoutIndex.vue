@@ -20,10 +20,6 @@ onMounted(() => {
   initFlowbite()
 })
 
-if (!cookies!.get('token')) {
-  router.replace('/login')
-}
-
 watch(() => route.path, () => {
   isLogin.value = cookies!.get("token") ? true : false
   userStore.setIsLogin(isLogin.value)
