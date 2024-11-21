@@ -20,6 +20,10 @@ onMounted(() => {
   initFlowbite()
 })
 
+if (!cookies!.get('token')) {
+  router.replace('/login')
+}
+
 watch(() => route.path, () => {
   isLogin.value = cookies!.get("token") ? true : false
   userStore.setIsLogin(isLogin.value)
@@ -29,7 +33,11 @@ const handleLogout = async () => {
   await logout()
   isLogin.value = false
   userStore.setIsLogin(isLogin.value)
-  window.location.reload()
+  if (route.path.includes('history')) {
+    router.push('/')
+  } else {
+    window.location.reload()
+  }
   }
 
 </script>
