@@ -1,19 +1,33 @@
 <script setup lang="ts">
 import TablesHistoryVoucher from '@/components/TablesHistoryVoucher.vue';
 import { useClaimVoucher } from '@/composables/useClaimVoucher';
-import { onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useLogout } from '@/composables/useLogout';
+import { axiosInstance } from '@/libs/axios';
+import { initFlowbite } from 'flowbite';
+import { onMounted, watch,inject } from 'vue';
+import type { VueCookies } from 'vue-cookies';
+import { useRoute,useRouter } from 'vue-router';
+
 
 const route = useRoute()
+const router = useRouter()
+const cookies = inject<VueCookies>("$cookies")
+const {logout} = useLogout()
 const { countVoucher, getVoucher, isLoading, removeClaimVoucher, isDeleting, vouchers } = useClaimVoucher()
 
 onMounted(() => {
   getVoucher()
+  initFlowbite()
 })
 
 watch(() => route.query.kategori, () => {
-  getVoucher()
+  getVoucher()  
 })
+
+const handleLogout = async () => {
+  await logout()
+  router.push('/')
+}
 
 const handleDeleteVoucherClaim = async (id: string) => {
   if (isDeleting.value) {
@@ -85,6 +99,11 @@ const handleDeleteVoucherClaim = async (id: string) => {
           </RouterLink>
         </li>
       </ul>
+      <div class="px-4 sm:hidden">
+        <button
+          class="text-gray-900 w-40 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          @click="handleLogout">Logout</button>
+      </div>
     </div>
   </aside>
 

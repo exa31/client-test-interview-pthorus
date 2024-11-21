@@ -7,11 +7,13 @@ import { initFlowbite } from 'flowbite';
 import { axiosInstance } from '@/libs/axios';
 import type { VueCookies } from 'vue-cookies';
 import { useToast } from 'vue-toast-notification';
+import { useLogout } from '@/composables/useLogout';
 
 const route = useRoute()
 const router = useRouter()
 const { getVoucher, isLoading, vouchers, countVoucher, claimVoucher, isClaiming } = useVoucher()
 const cookies = inject<VueCookies>("$cookies")
+const {logout} = useLogout()
 const toast = useToast()
 const isLogin = ref(false)
 
@@ -26,7 +28,6 @@ watch(() => route.query.kategori, () => {
 })
 
 const handleClaimVoucher = async (id: string) => {
-
   if (!cookies!.get("token")) {
     toast.error('Please login first')
     router.push('/login')
@@ -39,15 +40,11 @@ const handleClaimVoucher = async (id: string) => {
 }
 
 
-const logout = async () => {
-  try {
-    await axiosInstance.post(`${import.meta.env.VITE_BASE_URL}/auth/logout`)
-    cookies!.remove("token")
-    isLogin.value = false
-    window.location.reload()
-  } catch (error) {
-    console.log(error)
-  }
+const handleLogout = async () => {
+  await logout()
+  isLogin.value = false
+  window.location.reload()
+  
 }
 
 
@@ -101,7 +98,7 @@ const logout = async () => {
       <div class="px-4 sm:hidden" v-if="isLogin">
         <button
           class="text-gray-900 w-40 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-          @click="logout">Logout</button>
+          @click="handleLogout">Logout</button>
       </div>
       <div class="px-4 sm:hidden" v-else>
         <button @click="() => router.push('/register')"
